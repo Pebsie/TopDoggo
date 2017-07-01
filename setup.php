@@ -8,8 +8,18 @@
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name TEXT NOT NULL,
   wins INT(6) DEFAULT 0,
+  img TEXT
+  );");
+
+  $statement->execute();
+
+  echo "<h3>Pendong Doggo Directory</h3>";
+
+  $statement = $pdo->prepare("CREATE TABLE pdogdir (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name TEXT NOT NULL,
+  wins INT(6) DEFAULT 0,
   img TEXT,
-  verif INT(6) DEFAULT 0,
   verfemail TEXT
   );");
 

@@ -16,6 +16,7 @@
   <h2>Two enter: one leaves</h2>
   <p>Top Doggo is a multiplayer clicker game where players swear allegiance to one of two doggos and then fight for their victory over the other.</p>
   <p>To play choose one of the two doggos below to be your favorite and then click the option to lead your doggo to victory!!</p>
+  <p>You can also <a href='submit.php'>submit a doggo</a> to be added to the pool of contestants.</p>
   <small><p>This game is a bit of fun. We love doggos of all varities and <em>do not</em> support actual violence against animals.</p></small>
   <h2>FIGHT</h2>
   <table>

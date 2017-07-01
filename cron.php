@@ -18,7 +18,7 @@
       $statement->execute();
     }
 
-    $statement = $pdo->prepare("SELECT count(*) FROM dogdir WHERE verif=1");
+    $statement = $pdo->prepare("SELECT count(*) FROM dogdir");
     $statement->execute();
     $doggos = $statement->fetchColumn();
     echo "There are ".$doggos." doggos to choose from. Hmmm...<br />";
