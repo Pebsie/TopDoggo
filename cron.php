@@ -36,4 +36,7 @@
     $statement = $pdo->prepare("INSERT INTO fight (f1id, f2id) VALUES (".$d1.", ".$d2.");");
     $statement->execute();
   }
+
+  $statement = $pdo->prepare('UPDATE fight SET f1en = f1en + 5*'.$row['f2lvl'].', f2en = f2en + 5*'.$row['f1lvl']);
+  $statement->execute();
 ?>

@@ -52,10 +52,19 @@
 
     echo "<tr><th>".$d1['name']." (Level ".$row['f1lvl'].")</th><th>".$d2['name']." (Level ".$row['f2lvl'].")</th></tr>";
     echo "<tr><td><img width='256' height='256' src='".$d1['img']."'></td><td><img width='256' height='256' src='".$d2['img']."'></td></tr>";
-    echo "<tr><td>HP: ".$row['f1hp']."<br />ATK: ".$row['f1atk']."<br />DEF: ".$row['f1def']."</td>";
-    echo "<td>HP: ".$row['f2hp']."<br />ATK: ".$row['f2atk']."<br />DEF: ".$row['f2def']."</td></tr>";
-    echo "<tr><td><a href='index.php?a=f&d=1'><button>ATTACK</button></a></td>";
-    echo "<td><a href='index.php?a=f&d=2'><button>ATTACK</button></a></td></tr>";
+    echo "<tr><td>HP: ".$row['f1hp']."<br />ATK: ".$row['f1atk']."<br />DEF: ".$row['f1def']."<br />Energy: ".$row['f1en']."</td>";
+    echo "<td>HP: ".$row['f2hp']."<br />ATK: ".$row['f2atk']."<br />DEF: ".$row['f2def']."<br />Energy: ".$row['f2en']."</td></tr>";
+    if ($row['f1en'] > 0) {
+      echo "<tr><td><a href='index.php?a=f&d=1'><button>ATTACK</button></a></td>";
+    } else {
+      echo "<tr><td>Out of energy!</td>";
+    }
+    if ($row['f2en'] > 0) {
+        echo "<td><a href='index.php?a=f&d=2'><button>ATTACK</button></a></td></tr>";
+    } else {
+      echo "<td>Out of energy!</td></tr>";
+    }
+
 
     //options for upgrading
     echo "<tr><td>This doggo has ".$row['f1xp']." XP!";
@@ -72,7 +81,7 @@
     $d = $_GET['d'];
     if ($d == "1") { $od = "2"; $odname = $d2['name']; } elseif ($d == "2") { $od = "1"; $odname = $d1['name']; } //this saves us having to write out everything twice like we had to do above
     if ($a == "f") {
-
+      if ($row['f'.$d.'en'] > 0) {
         $dmg = rand(1, $row['f'.$d.'atk']) - rand(0, $row['f'.$od.'def']);
         if ($dmg > 0) {
           $statement = $pdo->prepare("UPDATE fight SET f".$od."hp = f".$od."hp - ".$dmg);
@@ -80,12 +89,15 @@
 
           echo "<strong>Dealt ".$dmg." damage to ".$odname."</strong>";
 
-          $statement = $pdo->prepare("UPDATE fight SET f".$d."xp = f".$d."xp + 1");
+          $statement = $pdo->prepare("UPDATE fight SET f".$d."xp = f".$d."xp + 1, f".$d."en = f".$d."en - 1, f".$od."en = f".$od."en + 1");
           $statement->execute();
 
         } else {
           echo "<strong>Your attack missed!</strong>";
         }
+      } else {
+        echo "<strong>Out of energy!</strong>";
+      }
 
     } elseif ($a == "hp" || $a == "atk" || $a == "def") {
 
