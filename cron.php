@@ -37,6 +37,6 @@
     $statement->execute();
   }
 
-  $statement = $pdo->prepare('UPDATE fight SET f1en = f1en + 5*'.$row['f2lvl'].', f2en = f2en + 5*'.$row['f1lvl']);
+  $statement = $pdo->prepare('UPDATE fight SET f1en = f1en + '.$row['f2lvl'].', f2en = f2en + '.$row['f1lvl']);
   $statement->execute();
 ?>

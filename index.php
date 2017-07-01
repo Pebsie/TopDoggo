@@ -69,11 +69,11 @@
     //options for upgrading
     echo "<tr><td>This doggo has ".$row['f1xp']." XP!";
     if ($row['f1xp'] > 0) {
-      echo "<br /><a href='index.php?a=hp&d=1'><button>+".$row['f1lvl']." HP</button></a><br /><a href='index.php?a=atk&d=1'><button>+".($row['f1lvl']/2)." ATK</button></a><br /><a href='index.php?a=def&d=1'><button>+".$row['f1lvl']." DEF</button></a>";
+      echo "<br /><a href='index.php?a=hp&d=1'><button>+".$row['f1lvl']." HP</button></a><br /><a href='index.php?a=atk&d=1'><button>+".($row['f1lvl']/2)." ATK (10 EXP)</button></a><br /><a href='index.php?a=def&d=1'><button>+".$row['f1lvl']." DEF</button></a>";
     }
     echo "</td><td>This doggo has ".$row['f2xp']." XP!";
     if ($row['f2xp'] > 0) {
-      echo "<br /><a href='index.php?a=hp&d=2'><button>+".$row['f2lvl']." HP</button></a><br /><a href='index.php?a=atk&d=2'><button>+".($row['f2lvl']/2)." ATK</button></a><br /><a href='index.php?a=def&d=2'><button>+".$row['f2lvl']." DEF</button></a>";
+      echo "<br /><a href='index.php?a=hp&d=2'><button>+".$row['f2lvl']." HP</button></a><br /><a href='index.php?a=atk&d=2'><button>+".($row['f2lvl']/2)." ATK (10 EXP)</button></a><br /><a href='index.php?a=def&d=2'><button>+".$row['f2lvl']." DEF</button></a>";
     }
     echo "</td></tr></table><br />";
 
@@ -83,6 +83,7 @@
     if ($a == "f") {
       if ($row['f'.$d.'en'] > 0) {
         $dmg = rand(1, $row['f'.$d.'atk']) - rand(0, $row['f'.$od.'def']);
+        if ($dmg < 1) { $dmg = 1; }
         if ($dmg > 0) {
           $statement = $pdo->prepare("UPDATE fight SET f".$od."hp = f".$od."hp - ".$dmg);
           $statement->execute();
@@ -91,6 +92,12 @@
 
           $statement = $pdo->prepare("UPDATE fight SET f".$d."xp = f".$d."xp + 1, f".$d."en = f".$d."en - 1, f".$od."en = f".$od."en + 1");
           $statement->execute();
+
+          if ($row['f'.$d.'xp']+1 > 10) {
+            $statement = $pdo->prepare("UPDATE fight SET f".$d."xp = 10");
+            $statement->execute();
+          }
+
 
         } else {
           echo "<strong>Your attack missed!</strong>";
@@ -108,9 +115,13 @@
           $statement->execute();
           echo "<strong>Increased HP!</strong>";
         } elseif ($a == "atk") {
-          $statement = $pdo->prepare("UPDATE fight SET f".$d."atk = f".$d."atk + ".($row['f'.$d.'lvl']/2).", f".$d."xp = f".$d."xp - 1, f".$d."lvl = f".$d."lvl + 1");
-          $statement->execute();
-          echo "<strong>Increased ATK!</strong>";
+          if ($row['f'.$d.'xp'] == 10) {
+            $statement = $pdo->prepare("UPDATE fight SET f".$d."atk = f".$d."atk + ".($row['f'.$d.'lvl']/2).", f".$d."xp = 0, f".$d."lvl = f".$d."lvl + 1");
+            $statement->execute();
+            echo "<strong>Increased ATK!</strong>";
+          } else {
+            echo "<strong>Increasing attack requires 10 EXP!</strong>";
+          }
         } elseif ($a == "def") {
           $statement = $pdo->prepare("UPDATE fight SET f".$d."def = f".$d."def + ".$row['f'.$d.'lvl'].", f".$d."xp = f".$d."xp - 1, f".$d."lvl = f".$d."lvl + 1");
           $statement->execute();
